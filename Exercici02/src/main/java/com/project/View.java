@@ -2,86 +2,44 @@ package main.java.com.project;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class View extends JFrame {
-
-    private JTextArea display;
+    private JTextField textField;
     private JButton[] buttons;
+    private CalculatorModel controller;
 
-    public View() {
+    public View(Controller controller2) {
         super("Calculadora");
+        this.controller = controller2;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        initComponents();
-        pack();
-        setLocationRelativeTo(null); // Centrar la ventana en la pantalla
-    }
+        setSize(300, 300);
+        setLayout(new BorderLayout());
 
-    private void initComponents() {
-        JPanel contentPane = new JPanel(new BorderLayout());
-        setContentPane(contentPane);
+        textField = new JTextField();
+        add(textField, BorderLayout.NORTH);
 
-        // Barra de menú
-        JMenuBar menuBar = new JMenuBar();
-        JMenu arxiusMenu = new JMenu("Arxius");
-        arxiusMenu.add(new JMenuItem("Sortir"));
-        JMenu operacionsMenu = new JMenu("Operacions");
-        operacionsMenu.add(new JMenuItem("Netejar"));
-        operacionsMenu.add(new JMenuItem("Igual"));
-        menuBar.add(arxiusMenu);
-        menuBar.add(operacionsMenu);
-        setJMenuBar(menuBar);
-
-        // Display
-        display = new JTextArea(2, 10);
-        display.setEditable(false);
-        display.setFont(new Font("Arial", Font.PLAIN, 20));
-        contentPane.add(display, BorderLayout.NORTH);
-
-        // Botones
-        JPanel buttonPanel = new JPanel(new GridLayout(5, 5));
-
-        String[] buttonLabels = {
-                "7", "8", "9", "+", "C",
-                "4", "5", "6", "-", "/",
-                "1", "2", "3", "x", "=",
-                "0", ".", " ", " ", " "
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(5, 4, 5, 5));
+        String[] labels = {
+            "C", "", "", "+",
+            "7", "8", "9", "-",
+            "4", "5", "6", "x",
+            "1", "2", "3", "/",
+            "0", "", "", "="
         };
 
-        buttons = new JButton[buttonLabels.length];
-
-        for (int i = 0; i < buttonLabels.length; i++) {
-            JButton button = new JButton(buttonLabels[i]);
-            buttons[i] = button;
-            buttonPanel.add(button);
+        buttons = new JButton[labels.length];
+        for (int i = 0; i < labels.length; i++) {
+            buttons[i] = new JButton(labels[i]);
+            buttons[i].addActionListener(e -> controller2.buttonPressed(e.getActionCommand()));
+            panel.add(buttons[i]);
         }
 
-        contentPane.add(buttonPanel, BorderLayout.CENTER);
+        add(panel, BorderLayout.CENTER);
+        setVisible(true);
     }
 
-    public void setDisplayText(String text) {
-        display.setText(text);
-    }
-
-    public String getDisplayText() {
-        return display.getText();
-    }
-
-    public int getButtonCount() {
-        return buttons.length;
-    }
-
-    public JButton getButton(int index) {
-        return buttons[index];
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new View().setVisible(true);
-            }
-        });
+    public void updateTextField(String text) {
+        textField.setText(text);
     }
 }
