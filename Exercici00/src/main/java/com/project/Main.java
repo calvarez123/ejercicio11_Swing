@@ -8,7 +8,6 @@ public class Main {
         // Inici del fil d'execució de SWING
         SwingUtilities.invokeLater(() -> {
 
-            // Mostrar la finestra quan es carrega el programa
             new MainWindow().setVisible(true);
         });
     }
